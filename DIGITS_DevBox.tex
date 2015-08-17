@@ -14,6 +14,84 @@
 %%---------------------------------------------------------------------
 \maketitle
 %\tableofcontents 
+\section{硬件配置}
+\begin{description}
+\item[显卡] 4个ASUS（华硕）GTX 980Ti-6GD5
+\item[CPU] 1个Intel（英特尔） Core i7-5960X
+\item[主板] 1个ASUS（华硕）X99-E WS
+\item[内存] 2个CORSAIR（海盗船） VENGERNCE（复仇者)LPX 32GB（4 $\times$ 8GB） DDR4 2400MHz CMK32GX4M4A2400C14R
+\item[硬盘] 3个WesternDigital（西部数码） 4TB 7200转
+\item[固态硬盘] 1个Samsung（三星）SSD 850pro 512GB
+\item[固态硬盘 for RAID] 1个Samsung SSD SM951 PCI-E M.2 SSD cache for RAID
+\item[机箱] 1个CORSAIR（海盗船） 900D
+\item[电源] 1个CORSAIR（海盗船） AX1500i 1500W
+\item[散热器]
+\item[风扇]
+\item[光驱]
+\item[显示器]
+\item[键盘鼠标]
+\end{description}
 
+\section{名词解释}
+\begin{description}
+
+\item[DVI] Digital Visual Interface，数字视频接口
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.2\textwidth]{DVI}
+\end{figure}
+
+\item[DislayPort] 高清数字显示借口标准
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.2\textwidth]{DisplayPort}
+\end{figure}
+
+\item[PCI-E] PCI Express，新的总线接口
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.2\textwidth]{PCI-E}
+\end{figure}
+
+\item[SATA Revision 3.0] Serial Advanced Technology Attachment，串行ATA规格第三版,6Gbps
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.2\textwidth]{SATA3}
+\end{figure}
+
+\item[SATA EXpress] SATA 3.0下一代的SATA接口，10Gbps
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.2\textwidth]{SATAE}
+\end{figure}
+
+\item[M.2] 一种替代MSATA新的接口规范，优势体现在速度和体积。支持Socket2和Socket3两种接口类型
+\begin{figure}[!ht]
+  \centering 
+  \subfigure[]{ 
+    \includegraphics[width=0.23\textwidth]{M2}} 
+  \subfigure[]{ 
+    \includegraphics[width=0.17\textwidth]{M2-MSATA}} 
+  \caption{}
+\end{figure}
+
+\item[RAID] Redundant Arrays of Independent Disks，磁盘阵列。磁盘阵列是由很多价格较便宜的磁盘，组合成一个容量巨大的磁盘组，利用个别磁盘提供数据所产生加成效果提升整个磁盘系统效能。利用这项技术，将数据切割成许多区段，分别存放在各个硬盘上。
+\begin{figure}[!ht]
+  \centering 
+  \subfigure[]{ 
+    \includegraphics[width=0.24\textwidth]{RAID1}} 
+  \subfigure[]{ 
+    \includegraphics[width=0.15\textwidth]{RAID2}} 
+  \caption{}
+\end{figure}
+
+\item[RAID] 一种存储性能、数据安全和存储成本兼顾的存储解决方案。为系统提供数据安全保障，但保障程度要比Mirror低而磁盘空间利用率要比Mirror高。数据以块为单位分布到各个硬盘上。RAID 5不对数据进行备份，而是把数据和与其相对应的奇偶校验信息存储到组成RAID5的各个磁盘上，并且奇偶校验信息和相对应的数据分别存储于不同的磁盘上。当RAID5的一个磁盘数据损坏后，利用剩下的数据和相应的奇偶校验信息去恢复被损坏的数据。
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.4\textwidth]{RAID5}
+\end{figure}
+\end{description}
+
+\item[SLI]
 %%---------------------------------------------------------------------
 \end{document}
