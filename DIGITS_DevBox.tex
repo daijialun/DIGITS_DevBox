@@ -22,7 +22,7 @@
 \item[内存] 2个CORSAIR（海盗船） VENGERNCE（复仇者)LPX 32GB（4 $\times$ 8GB） DDR4 2400MHz CMK32GX4M4A2400C14R
 \item[硬盘] 3个WesternDigital（西部数码） 4TB 7200转
 \item[固态硬盘] 1个Samsung（三星）SSD 850pro 512GB
-\item[固态硬盘 for RAID] 1个Samsung SSD 512GB SM951
+\item[固态硬盘] 1个Samsung SSD 512GB SM951 cache for RAID
 \item[机箱] 1个CORSAIR（海盗船） 900D
 \item[电源] 1个CORSAIR（海盗船） AX1500i 1500W
 \item[散热器] 1个CORSAIR（海盗船） H110 水冷CPU散热器
@@ -86,7 +86,7 @@
   \caption{}
 \end{figure}
 
-\item[RAID] 一种存储性能、数据安全和存储成本兼顾的存储解决方案。为系统提供数据安全保障，但保障程度要比Mirror低而磁盘空间利用率要比Mirror高。数据以块为单位分布到各个硬盘上。RAID 5不对数据进行备份，而是把数据和与其相对应的奇偶校验信息存储到组成RAID5的各个磁盘上，并且奇偶校验信息和相对应的数据分别存储于不同的磁盘上。当RAID5的一个磁盘数据损坏后，利用剩下的数据和相应的奇偶校验信息去恢复被损坏的数据。
+\item[RAID5] 一种存储性能、数据安全和存储成本兼顾的存储解决方案。为系统提供数据安全保障，但保障程度要比Mirror低而磁盘空间利用率要比Mirror高。数据以块为单位分布到各个硬盘上。RAID 5不对数据进行备份，而是把数据和与其相对应的奇偶校验信息存储到组成RAID5的各个磁盘上，并且奇偶校验信息和相对应的数据分别存储于不同的磁盘上。当RAID5的一个磁盘数据损坏后，利用剩下的数据和相应的奇偶校验信息去恢复被损坏的数据。
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.4\textwidth]{RAID5}
@@ -102,5 +102,127 @@
 
 \item[GDDR5] Graphics Double Data Rate SDRAM version5，是一种高性能显卡用内存，需搭配支持PCI-E以上规格的显卡，高频率达4GHZ，低功耗。
 \end{description}
+
+\section{软件配置名词}
+\begin{description}
+\item[UEFI] Unified Extensible Firmware Interface，统一的可扩展固件接口，是一种详细描述类型接口的标准。这种接口用于操作系统自动从预启动的操作环境，加载到一种操作系统上。
+\item[BIOS] Basic Input/Output System，基本输入/输出系统。
+\item[固件] Firmware，固定软件（自己理解），写入EROM或EEPROM中的程序。固件担任着一个系统最基础最底层工作的软件。初期，这些硬件内所保存的程序是无法被用户直接读出或修改的，如今这些是可以重复刷写的，让固件得以修改和升级。
+\end{description}
+
+\section{环境配置}
+\subsection{显卡驱动安装}
+\subsubsection{驱动来源}
+\begin{itemize}
+\item 开源驱动nouveau（livecd安装时用的驱动）
+\item 源（受限制驱动列表）
+\item PPA源（一般是私人建的，方便群众用）
+\item 自己下载编译的驱动（我们使用的方法）
+\end{itemize}
+
+\subsection{安装NVIDIA显卡驱动}
+\begin{enumerate}
+\item 受限制驱动列表（源）sudo apt-get install nvidia-current nvidia-settings
+\item 编译驱动
+	\begin{enumerate}
+	\item 下载驱动 Nvidia中文官网是 http://www.nvidia.cn/page/home.html
+	\item 将下载的NVIDIA-Linux-x86-185.18.14-pkg1.run驱动文件,放到 /home/用户名/ 目录下面。
+	\item 编译依赖，sudo apt-get install build-essential pkg-config xserver-xorg-dev linux-headers-`uname -r`
+	\end{enumerate}
+\item 屏蔽开源驱动nouveau
+	\begin{itemize}
+	\item blacklist（推荐）
+	    \begin{enumerate}
+	    \item 打开终端，输入sudo vim /etc/modprobe.d/blacklist.conf
+	    \item 添加 blacklist nouveau
+	    \end{enumerate}
+	\item grub2
+	    \begin{enumerate}
+	    \item 打开终端，输入sudo vim /etc/modprobe.d/blacklist.conf
+	    \item 修改 GRUB\_CMDLINE\_LINUX="" 为 GRUB\_CMDLINE\_LINUX="nomodeset" 
+	    \item 输入sudo update-grub
+	    \end{enumerate}	
+	\end{itemize}
+\item 安装装备
+	\begin{enumerate}
+	\item 清除之前与nvidia相关的驱动程序，sudo apt-get --purge remove nvidia-*  
+	\item 编译依赖，sudo apt-get install build-essential pkg-config xserver-xorg-dev linux-headers-`uname -r`
+	\item 切换到虚拟终端tty1，ctl+alt+F1（如果不屏蔽nouveau，可能会出现黑屏现象）；黑屏则sudo reboot，然后重启后，按下Ese或者选择low-quality，进入tty1，进行驱动的安装
+	\end{enumerate}
+\item 注销系统，关闭图形环境  sudo stop lightdm （Ubuntu15.04下，运行sudo systemtctl stop lightdm）
+\item 安装过程 
+	\begin{enumerate}
+	\item 在驱动文件目录下，sudo ./NVIDIA*.run
+	\end{enumerate}
+\item 启动图形环境，sudo start lightdm
+\end{enumerate}
+
+\subsection{创建RAID5}
+\subsubsection{RAID的优点}
+\begin{itemize}
+\item 可高效恢复磁盘
+\item 增强了速度
+\item 扩容了存储能力
+\end{itemize}
+
+\subsubsection{RAID的分类}
+\begin{description}
+\item[硬RAID] hardware raid。通过用硬件来实现RAID功能的就是硬RAID，比如：各种RAID卡，还有主板集成能够做的RAID都是硬RAID。全硬的RAID 则全面具备了自己的RAID 控制/处理与I/O 处理芯片，甚至还有阵列缓冲（Array Buffer ），对CPU 的占用率以及整体性能是这三种类型中最优势的，但设备成本也是三种类型中最高的。hardRAID 自成一个单元，由自己的firmware硬件和软件，与主板和操作系统无关，即Ubuntu不需要额外的程序来管理。
+\item[软RAID] software raid。通过用操作系统来完成RAID功能的就是软RAID，比如：在Linux操作系统下，用3块硬盘做的RAID5。，全软RAID 就是指RAID 的所有功能都是操作系统（OS）与CPU 来完成，没有第三方的控制/处理（业界称其为RAID 协处理器――RAID Co-Processor ）与I/O 芯片。这样，有关RAID 的所有任务的处理都由CPU 来完成，可想而知这是效率最低的一种RAID 。
+\item[主板RAID] 通过主板内建raid控制器创建阵列，由操作系统驱动识别。这个在Intel Desktop的主板上表现的比较明显。主要缺乏自己的I/O 处理芯片，所以这方面的工作仍要由CPU 与驱动程序来完成。而且，半软半硬RAID 所采用的RAID 控制/处理芯片的能力一般都比较弱，不能支持高的RAID 等级。FakeRaid又称BiosRaid，是由主板的Bios程序组成，与Ubuntu系统无关。但是Ubuntu提供dmraid命令与BIOS进行沟通，由FakeRAID帮助管理。基本上，ubuntu也把FakeRAID当成单一硬盘使用。
+\end{description}
+
+\subsubsection{主板集成RAID与外插RAID卡区别}
+\begin{description}
+\item[性能] 主板集成的RAID，它的性能以及它的速度是通过主板的CPU与内存来实现的，它会占有主板一定的带宽，会影响整机的性能；外插RAID卡，它本身由自己的CPU和内存，所以它的数据处理大部分都会由自己处理，不会影响主板上的CPU与内存速度，总体看来，外插的RAID卡的RAID要比主板集成的RAID快得多。格式化、挂载、写入与重建全部由mdadm负责。
+\item[安全性] 主板集成的RAID它的安全性不能够得到保证，比如：我们用P8SCT主板做一个SATA RAID，不论你做RAID几，它是通过更改主板的BIOS选项做成的，所以一旦主板损坏、主板的CMOS电池掉电、无意更改了主板BIOS的设置都会带来RAID的丢失，通过主板做成的RAID，一旦丢失，将会不能恢复，后果是非常严重；而外插的RAID卡做成的RAID就不会因为主板损坏、主板的CMOS电池掉电等现象对数据造成影响，所以外插的RAID卡，它的安全性远远大于主板集成的。SoftRaid与主板BIOS程序无关，完全由Ubuntu的mdadm命令管理。
+\end{description}
+
+
+\subsubsection{创建RAID5步骤（主板BISO）}
+\begin{enumerate}
+\item 对各个磁盘删除分区，且进行格式化。大分区硬盘使用GPT分区，MRB分区最大只支持2TB
+\item 创建，create
+\item 分配，
+\item 格式化 sudo mkfs.ext4 /dev/sdb
+\item 挂载 sudo /dev/mapper/isw\_dfafd\_Volume1 /deep
+\item 自动挂载 sudo vim /etc/fstab
+\end{enumerate}
+
+可能出现问题
+\begin{itemize}
+\item 在装系统过程中，在选择系统分区时，ctrl+alt+F1，输入dmraid -ay激活RAID（Ubuntu server） 这种方式其实还是属于介于软raid与硬raid之间。在启动时候，由硬件raid驱动，当载入linux内核之后，由linux接手管理，还是会消耗cpu等资源。与更传统的软件raid比较，就是启动的时候（linux内核未介入之前）系统看到的仍然是一个raid的虚拟硬盘，所以两快硬盘完全一样，要恢复重建之类的更加简单。另外的话，dmraid映射了底层的硬件raid驱硬件控制器，raid控制可能也能帮助处理一些操作，可能对性能也会有一定提高。 
+\item dmraid将硬件的raid映射成/dev/mapper/下面的设备，例如/dev/mapper/isw\_dfadcda\_Volume1，其中isw为intel的硬件名字，Volume1为RAID名称。Ubuntu在安装过程中，已经将RAID显示为/dev/mapper/isw\_dfadcda\_Volume1，已经显示正确了，只不过容量出现问题，理论上的容量应该为7.2TB，但是实际情况只有3.6TB（至今未解开）。dmraid对于大容量硬盘的识别经常会出现问题（1TB识别为800G）
+\item dmraid可参考http://www.cnblogs.com/linuxer/archive/2012/03/07/2441224.html
+http://book.51cto.com/art/200902/110754.htm
+\item Ubuntu的软RAID相关命令为mdadm，其配置、测试、删除参考http://blog.itpub.net/27771627/viewspace-1246416/
+\item 目前使用的RAID为主板的Intel Rapid Storage Technology，目前驱动只支持Window，对Windows的兼容性不好，为fakeraid
+\item fake raid仅提供廉价的控制器，raid处理开销仍由CPU负责，因此性能与CPU占用基本与software raid持平。 如果只有单个linux系统，使用software raid一般比fake raid更健壮，但是，在多启动环境中(例如windows与linux双系统)，为了使各个系统都能正确操作相同的raid分区，就必须使用fake raid了。 http://blog.163.com/jiangh_1982/blog/static/12195052014252131760/
+\end{itemize}
+
+DIGITS的RAID5在各种环境下的测试，目前主板集成的RAID功能，即Intel@ Rapid Storage Technology，在linux下主要使用的是DM RAID和MD RAID，也就是dmraid和mdadm命令。DM RAID (dmraid)，但是mdadm是比较新的应用。但是dmraid已经几年没更新了，而mdadm经过几年的测试，在工业界更受欢迎。mdadm在Window下有UI界面，在Linux下只有命令行，其产生的中间数据支持两个系统下，可用在双系统环境下。在单Linux系统下，使用mdadm比较合适。
+
+只有dmraid的情况下，BIOS已创建RAID5
+\begin{itemize}
+\item Ubuntu识别/dev/mapper/isw_dafadfadsf_Volume1，只有3.6TB 
+\item Ubuntu server无法用dmraid激活mapper，所以无法显示
+\item Debian不识别
+\end{itemize}
+
+有mdadm的情况下，BIOS已创建RAID5，ubuntu系统下mdadm不创建RAID
+\begin{itemize}
+\item Ubuntu识别/dev/mapper/isw_dafadfadsf_Volume1，只有3.6TB 
+\item Ubuntu server无法用dmraid激活mapper，所以无法显示
+\item Debian不识别
+\end{itemize}
+
+有mdadm，BIOS不创建RAID5，Ubuntu系统下mdadm创建RAID
+\begin{itemize}
+\item Ubuntu不识别8TB的RAID5
+\item Ubuntu server识别RAID5为8TB
+\item Debian识别RAID5为8TB
+\end{itemize}
+
+因此，在现在Ubuntu14.04的系统下，决定使用mdadm创建软RAID
 %%---------------------------------------------------------------------
 \end{document}
