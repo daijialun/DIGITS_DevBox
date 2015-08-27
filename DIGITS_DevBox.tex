@@ -392,25 +392,29 @@ sudo vim /etc/fstab
 
 
 \section{其他工作}
-\subsection{显卡驱动安装}
-\subsubsection{驱动来源}
+\subsection{安装NVIDIA显卡驱动}
+\textbf{此方法只适合安装NVIDIA最新的显卡驱动，较为麻烦，不推荐使用，只供参考。在Caffe安装过程中，提供了更简便的方法来安装NVIDIA显卡驱动，请使用其方法。}
+\begin{enumerate}
+\item 以下是驱动来源，更新受限制驱动列表（源）。
 \begin{itemize}
 \item 开源驱动nouveau（livecd安装时用的驱动）
 \item 源（受限制驱动列表）
 \item PPA源（一般是私人建的，方便群众用）
 \item 自己下载编译的驱动（我们使用的方法）
 \end{itemize}
-
-\subsection{安装NVIDIA显卡驱动}
-\begin{enumerate}
-\item 受限制驱动列表（源）sudo apt-get install nvidia-current nvidia-settings
-\item 编译驱动
+\begin{bash}
+sudo apt-get install nvidia-current nvidia-settings
+\end{bash}
+\item 下载驱动
 	\begin{enumerate}
-	\item 下载驱动 Nvidia中文官网是 http://www.nvidia.cn/page/home.html
-	\item 将下载的NVIDIA-Linux-x86-185.18.14-pkg1.run驱动文件,放到 /home/用户名/ 目录下面。
-	\item 编译依赖，sudo apt-get install build-essential pkg-config xserver-xorg-dev linux-headers-`uname -r`
+	\item \href{http://www.nvidia.cn/page/home.html}{Nvidia中文官网}下载驱动。
+	\item 将下载的NVIDIA-Linux-x86\_64-355.06.run驱动文件,放到{\color{blue}{/home/用户名/}}目录下面。
+	\item 编译依赖文件，
+	\begin{bash}
+	sudo apt-get install build-essential pkg-config xserver-xorg-dev linux-headers-`uname -r`
+	\end{bash}
 	\end{enumerate}
-\item 屏蔽开源驱动nouveau
+\item 屏蔽开源驱动nouveau，选一种方法即可
 	\begin{itemize}
 	\item blacklist（推荐）
 	    \begin{enumerate}
@@ -420,46 +424,48 @@ sudo vim /etc/fstab
 	\item grub2
 	    \begin{enumerate}
 	    \item 打开终端，输入sudo vim /etc/modprobe.d/blacklist.conf
-	    \item 修改 GRUB\_CMDLINE\_LINUX="" 为 GRUB\_CMDLINE\_LINUX="nomodeset" 
+	    \item 修改 GRUB\_CMDLINE\_LINUX=``'' 为 GRUB\_CMDLINE\_LINUX=``nomodeset''
 	    \item 输入sudo update-grub
 	    \end{enumerate}	
 	\end{itemize}
 \item 安装装备
 	\begin{enumerate}
 	\item 清除之前与nvidia相关的驱动程序，sudo apt-get --purge remove nvidia-*  
-	\item 编译依赖，sudo apt-get install build-essential pkg-config xserver-xorg-dev linux-headers-`uname -r`
-	\item 切换到虚拟终端tty1，ctl+alt+F1（如果不屏蔽nouveau，可能会出现黑屏现象）；黑屏则sudo reboot，然后重启后，按下Ese或者选择low-quality，进入tty1，进行驱动的安装
+	\item <ctl+alt+F1>切换到虚拟终端tty1（如果不屏蔽nouveau，可能会出现黑屏现象）；黑屏则<ctl+alt+F7>切换回图形界面，然后重启后，按下Ese或者选择low-quality，进入tty1，进行驱动的安装
+	\item 关闭图形环境  sudo stop lightdm （Ubuntu15.04下，运行sudo systemctl stop lightdm）
 	\end{enumerate}
-\item 注销系统，关闭图形环境  sudo stop lightdm （Ubuntu15.04下，运行sudo systemtctl stop lightdm）
+
 \item 安装过程 
 	\begin{enumerate}
 	\item 在驱动文件目录下，sudo ./NVIDIA*.run
+	\item 安装中基本选择<Yes>
+	\item 重启后，即完成NVIDIA显卡驱动安装
 	\end{enumerate}
-\item 启动图形环境，sudo start lightdm
 \end{enumerate}
 
 \subsection{创建RAID5步骤（Fake RAID，在BISO界面）}
+\textbf{此方法是使用BIOS界面的Intel Rapid Storage Technology程序来完成RAID的创建，使用的dmraid方法，在Ubuntu系统下映射在/dev/mapper/下，不推荐使用，只供参考。在Ubuntu系统下，请使用mdadm命令完成RAID相关任务。}
 \begin{enumerate}
-\item \textbf{确认主板芯片组是否支持RAID功能}。
-\item \textbf{初始化}。对各个磁盘删除分区（fdisk命令），且进行格式化（mkfs命令）。小容量硬盘（不到2TB）使用MRB分区表，大容量硬盘（2TB以上）使用GPT分区\footnote{http://wangheng.org/shi-yong-parted-chuang-jian-gpt-fen-qu.html}。
+\item 确认主板芯片组是否支持RAID功能。
+\item 初始化。对各个磁盘删除分区（fdisk命令），且进行格式化（mkfs命令）。小容量硬盘（不到2TB）使用MRB分区表，大容量硬盘（2TB以上）使用GPT分区\footnote{http://wangheng.org/shi-yong-parted-chuang-jian-gpt-fen-qu.html}。
 \begin{bash}
 sudo fdisk -l		   #查看磁盘空间以及分区
 sudo fdisk /dev/sdX  #用fdisk对某块硬盘处理，/dev/sdX中X表示磁盘号，例如/dev/sdb
 sudo mkfs.ext4 /dev/sdX    #用mkfs将/dev/sdX格式化为ext4格式
 sudo parted /dev/sdX	#用parted工具对大容量硬盘分区，为GPT分区
 \end{bash}
-\item \textbf{在BIOS程序中设置RAID}。在Advanced Mode下，在状态栏中点击Advanced，选择PCH Storage Configuration，将SATA Controller 1 Mode Seletion设置为RAID。（只有Controller 1支持RAID模式）
-\item \textbf{进入Intel Rapid Storage Technology（Intel RST）}。如果系统运行开机自检（POST）时，按下<Ctrl>+<I>进入程序界面进行管理。否则，在BIOS界面中，选择Intel Rapid Storage Technology为On后，重启再进入BIOS，在Advanced Mode选项中，在状态栏中点击Advanced，在底部可看到Intel Rapid Storage Technology的选项，点击进入设置。
+\item 在BIOS程序中设置RAID。在Advanced Mode下，在状态栏中点击Advanced，选择PCH Storage Configuration，将SATA Controller 1 Mode Seletion设置为RAID。（只有Controller 1支持RAID模式）
+\item 进入Intel Rapid Storage Technology（Intel RST）。如果系统运行开机自检（POST）时，按下<Ctrl + I>进入程序界面进行管理。否则，在BIOS界面中，选择Intel Rapid Storage Technology为On后，重启再进入BIOS，在Advanced Mode下，在状态栏中点击Advanced，在底部可看到Intel Rapid Storage Technology的选项，点击进入设置。
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.4\textwidth]{raid}
 \end{figure}
-\item \textbf{创建RAID}。选择Create RAID Volume。
+\item 创建RAID，选择Create RAID Volume。
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.4\textwidth]{creat_raid}
 \end{figure}
-\item \textbf{设置RAID}。选中上图的选项中的Disks，显示下图。选择硬盘创建RAID。
+\item 设置RAID，选中上图的选项中的Disks，显示下图。选择硬盘创建RAID。
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.4\textwidth]{select_raid}
@@ -469,45 +475,47 @@ sudo parted /dev/sdX	#用parted工具对大容量硬盘分区，为GPT分区
 \centering
 \includegraphics[width=0.4\textwidth]{delete_raid}
 \end{figure}
-\item \textbf{格式化}。进入Ubuntu系统后，在/dev/mapper/下可看到RAID5被映射成为isw\_dfafd\_Volume1。将其格式化为Ext4文件系统。（对于大容量的硬盘的识别会出现问题，会显得比理论容量小；在Window系统下，不会出现这中情况。）
+\item 格式化，进入Ubuntu系统后，在/dev/mapper/下可看到RAID5被映射成为isw\_dfafd\_Volume1。将其格式化为Ext4文件系统。（对于大容量的硬盘的识别会出现问题，会显得比理论容量小；在Window系统下，不会出现这中情况。）
 \begin{bash}
-sudo mkfs.ext4 /dev/mapper/isw\_dfafd\_Volume1
+sudo mkfs.ext4 /dev/mapper/isw_dfafd_Volume1
 \end{bash}
-\item \textbf{挂载}。将格式化好的映射硬盘，挂载到/deep目录下。
+\item 挂载，将格式化好的映射硬盘，挂载到/deep目录下。
 \begin{bash}
 sudo mkdir /deep
-sudo /dev/mapper/isw\_dfafd\_Volume1 /deep
+sudo /dev/mapper/isw_dfafd_Volume1 /deep
 \end{bash}
-\item \textbf{自动挂载}。为了重启后，直接使用映射硬盘，让其自动挂载。按照格式进入/etc/fstab
+\item 自动挂载，为了重启后，直接使用映射硬盘，让其自动挂载。按照格式进入/etc/fstab
 \begin{bash}
 sudo vim /etc/fstab
 \end{bash}
 \end{enumerate}
 
 \subsection{RAID5实验情况}
-DIGITS的RAID5在各种环境下的测试，目前主板集成的RAID功能，即Intel Rapid Storage Technology，在linux下主要使用的是DM RAID和MD RAID，也就是dmraid和mdadm命令。DM RAID (dmraid)，但是mdadm是比较新的应用。但是dmraid已经几年没更新了，而mdadm经过几年的测试，在工业界更受欢迎。mdadm在Window下有UI界面，在Linux下只有命令行，其产生的中间数据支持两个系统下，可用在双系统环境下。在单Linux系统下，使用mdadm比较合适。
+DIGITS DevBox的RAID5在各种软件配置和系统下的测试。目前X99主板集成的RAID功能，为Intel Rapid Storage Technology，在Linux下主要使用的是DM RAID和MD RAID，即dmraid和mdadm命令。DM RAID (dmraid)默认情况下，Ubuntu可以识别，但是已经几年没更新了；而mdadm经过几年的测试，在工业界更受欢迎。mdadm在Window下有UI界面，在Linux下只有命令行，其产生的中间数据支持两个系统下，可用在双系统环境下。在单Linux系统下，使用mdadm比较合适。
 
-只有dmraid的情况下，BIOS已创建RAID5
+本此实验是使用3块3.6TB的硬盘，在BIOS中和Ubuntu系统下分别创建RAID5进行实验，理论上RAID5应该为7.2TB。
 \begin{itemize}
-\item Ubuntu识别/dev/mapper/isw\_dafadfadsf\_Volume1，只有3.6TB 
-\item Ubuntu server无法用dmraid激活mapper，所以无法显示
-\item Debian不识别
+\item 默认情况下，BIOS中已创建RAID5
+	\begin{itemize}
+	\item Ubuntu识别/dev/mapper/isw\_dafadfadsf\_Volume1，只有3.6TB 
+	\item Ubuntu server无法用dmraid激活mapper，无法显示
+	\item Debian不识别
+	\end{itemize}
+\item 安装mdadm的情况下，BIOS中已创建RAID5，但是ubuntu系统下mdadm不创建RAID5
+	\begin{itemize}
+	\item Ubuntu识别/dev/mapper/isw\_dafadfadsf\_Volume1，只有3.6TB 
+	\item Ubuntu server无法用dmraid激活mapper，所以无法显示
+	\item Debian不识别
+	\end{itemize}
+\item 安装mdadm和dmraid的情况下，BIOS中不创建RAID5，Ubuntu系统下mdadm创建RAID5
+	\begin{itemize}
+	\item Ubuntu不识别RAID5
+	\item Ubuntu server识别RAID5为7.2TB
+	\item Debian识别RAID5为7.2TB
+	\end{itemize}
 \end{itemize}
+由以上实验，可以看出Ubuntu只识别dmraid所创建的RAID5的映像，而Ubuntu server和Debian都不能识别；对于mdadm所创建的RAID5，Ubuntu server和Debian在安装系统时，都能够识别，而Ubuntu不能够识别。
 
-有mdadm的情况下，BIOS已创建RAID5，ubuntu系统下mdadm不创建RAID
-\begin{itemize}
-\item Ubuntu识别/dev/mapper/isw\_dafadfadsf\_Volume1，只有3.6TB 
-\item Ubuntu server无法用dmraid激活mapper，所以无法显示
-\item Debian不识别
-\end{itemize}
-
-有mdadm，BIOS不创建RAID5，Ubuntu系统下mdadm创建RAID
-\begin{itemize}
-\item Ubuntu不识别8TB的RAID5
-\item Ubuntu server识别RAID5为8TB
-\item Debian识别RAID5为8TB
-\end{itemize}
-
-因此，在现在Ubuntu14.04的系统下，决定使用mdadm创建软RAID
+因此，考虑到目前的系统为Ubuntu14.04，而且需要使用硬盘的RAID5功能，且mdadm比dmraid更稳定与安全，所以在此决定使用mdadm创建软RAID。
 %%---------------------------------------------------------------------
 \end{document}
