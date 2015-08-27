@@ -306,6 +306,8 @@ RAID功能：支持RAID 0，1，5，10
 \item[固件] Firmware，固定软件（自己理解），写入EROM或EEPROM中的程序。固件担任着一个系统最基础最底层工作的软件。初期，这些硬件内所保存的程序是无法被用户直接读出或修改的，如今这些是可以重复刷写的，让固件得以修改和升级。
 \item[MRB分区] MRB分区表是将磁盘的分区信息保存到磁盘的第一个扇区（MRB扇区）的64个字节中，每个分区项（文件系统、起始柱面号、磁头号等信息）占有16个字节，因此总共只能记录4个主分区，由于在一个分区项中用4个字节存储分区的总扇区数（$2^{32}$），每扇区512字节($2^{9}B$)，因此每个分区不能超过2TB（$2^{32} \times 2^{9}B=2^{41}B=2TB$）。磁盘容量超过2TB以后，分区的起始位置也就无法表示了。
 \item[GPT分区] GPT分区表是基于可扩展固件借口（EFI）使用的磁盘分区架构，支持每个磁盘可达到128个分区，且最大容量可达18EB。
+\item[cuDNN] CUDA Deep Neural Network library\footnote{http://devblogs.nvidia.com/parallelforall/accelerate-machine-learning-cudnn-deep-neural-network-library/}，是专门针对Deep Learning框架设计的一套GPU计算加速方案，使工作者投入与设计和训练神经网络模型，而不用在底层的表现上话费时间。目前支持的DL工具包括caffe，Theano和Torch等。cuDNN的Realease版本有cuDNN v1，cuDNN v2 for CUDA 6.5 and later 和cuDNN v3 for CUDA 7.0 and later.
+\item[CUDA]
 \end{description}
 
 
@@ -389,7 +391,63 @@ sudo vim /etc/fstab
 \end{enumerate}
 
 
+\section{Caffe安装}
+\subsection{Caffe配置}
+目前，Caffe主要的安装步骤是参考了欧新宇老师博客中的\href{http://ouxinyu.github.io/Blogs/20140723001.html}{Caffe + Ubuntu 15.04 + CUDA 7.0 新手安装配置指南}。安装Caffe时请认真阅读。
 
+\textbf{在本台DIGITS DevBox中，Caffe所安装的依赖或者库文件：}
+\begin{itemize}
+\item Ubuntu 14.04.3（默认情况为Ubuntu 14.04.3，暂时不推荐使用15.04）
+\item CUDA7.0
+\item cuDNN v2（cuDNN v3已更新）
+\item OpenCV3.0.0rc1（推荐用这个包，之前下载的库在安装事可能出现问题）
+\item Python 2.7.6（自动安装）
+\item Matlab2014b
+\item MKL(作为BLAS，使用parallel\_studio\_xe\_2015\_update2.tar.gz，目前2016版已更新)
+\item glog(Google Logging Library，glog-0.3.3)
+\end{itemize}
+
+\subsection{DIGITS}
+DIGITS是一款检测深度学习的软件工具。目前使用的版本为DIGITS v2.0.0-rc for Ubuntu 14.04
+\subsubsection{软件需求}
+\begin{itemize}
+\item NVIDIA驱动版本必须是346或者更高版本
+\item CUDA toolkit（>=6.5）
+\item cuDNN
+\item Caffe或Torch
+\item graphviz
+\begin{bash}
+sudo apt-get install graphviz
+\end{bash}
+\end{itemize}
+
+\subsubsection{安装GIGITS}
+\begin{enumerate}
+\item 下载安装包\href{https://developer.nvidia.com/digits}{digits-2.0.0-rc.tar.gz}
+\item 解压安装包
+\begin{bash}
+tar xvf digits-2.0.0-rc.tar.gz
+\end{bash}
+\item 进入解压目录digits-2.0，运行安装脚本
+\begin{bash}
+cd digits-2.0
+./install.sh
+\end{bash}
+\item 运行runme.sh，启动DIGITS server。在浏览器打开http://localhost:5000/来查看DIGITS工具。
+\begin{bash}
+./runme.sh
+\end{bash}
+\end{enumerate}
+
+\subsection{问题解决}
+\begin{itemize}
+\item 在安装过程中，必须根据CUDA版本选择NVIDIA驱动版本，例如CUDA7.0对应的版本应该是NVIDIA346版。如果按照Caffe安装步骤给出的方法，基本上不会出现问题。但是如果是手动安装NVIDIA驱动，且安装了最新版本驱动，例如安装了最新的355版本后，可能显示{\color{blue}{no CUDA-capable device is detected}}。则卸载最新版本保证回到对应版本驱动。
+\begin{bash}
+sudo ./NVIDIA-Linux-x86_64-355.06.run --unisntall
+\end{bash}
+\item 目前（2015.08.26）的从caffe的Github上下载的caffe-master是有问题的，因为很多文件格式改为了*.h5，这是HDF5格式。没有依赖文件的话，Ubuntu暂时不支持。如果碰到如果问题，将*.h5格式全去掉.h5，改为二进制格式则正常运行。例如在caffer-master/examples/cifar10/train\_quick.sh，caffer-master/examples/cifar10/train\_quick.sh与caffer-master/examples/imagenet/train.sh
+\item 在Github的Caffe库里的release版本存在很多错误，例如caffe-rc2，或许是编译或者安装问题，总之尽量用当前提供的Caffe版本。
+\end{itemize}
 
 \section{其他工作}
 \subsection{安装NVIDIA显卡驱动}
@@ -408,7 +466,7 @@ sudo apt-get install nvidia-current nvidia-settings
 \item 下载驱动
 	\begin{enumerate}
 	\item \href{http://www.nvidia.cn/page/home.html}{Nvidia中文官网}下载驱动。
-	\item 将下载的NVIDIA-Linux-x86\_64-355.06.run驱动文件,放到{\color{blue}{/home/用户名/}}目录下面。
+	\item 将下载的目前最新的驱动文件NVIDIA-Linux-x86\_64-355.06.run,放到{\color{blue}{/home/用户名/}}目录下面。
 	\item 编译依赖文件，
 	\begin{bash}
 	sudo apt-get install build-essential pkg-config xserver-xorg-dev linux-headers-`uname -r`
@@ -437,7 +495,7 @@ sudo apt-get install nvidia-current nvidia-settings
 
 \item 安装过程 
 	\begin{enumerate}
-	\item 在驱动文件目录下，sudo ./NVIDIA*.run
+	\item 在驱动文件目录下，sudo ./NVIDIA-Linux-x86\_64-355.06.run
 	\item 安装中基本选择<Yes>
 	\item 重启后，即完成NVIDIA显卡驱动安装
 	\end{enumerate}
