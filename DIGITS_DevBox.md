@@ -57,8 +57,11 @@
     在.bashrc中加入export PATH=$PATH:/usr/local/cuda-7.0/bin
     export LD_LIBRARY_PATH=$LD_LIBARY_PATH:/usr/local/cuda-7.0/lib64
     
-- 目前（2015.08.26）
+- 目前（2015.08.26）的从caffe的Github上下载的caffe-master是有错误的，因为很多文件格式改为了*.h5，这是HDF5格式的不支持。如果碰到如果问题，将*.h5格式全去掉.h5，改为二进制格式则正常运行。
+
+- 在Github的Caffe库里的release版本存在很多错误，例如caffe-rc2，或许是编译或者安装问题，总之尽量用所提供的版本来完成Caffe的安装。在当时的版本
     
+
 ## NVIDIA工具
 
 **NVIDIA官网中很多程序或工具都是需要注册后才可下载的。**
