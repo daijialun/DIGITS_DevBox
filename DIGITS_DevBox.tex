@@ -300,92 +300,96 @@ RAID功能：支持RAID 0，1，5，10
 \item[DDR4] Dual Data Rate SDRAM，是一种高速CMOS动态随即访问的内存。DDR4支持2133MHz，32GB DDR4-2133达到48.4GB/s。
 
 \item[GDDR5] Graphics Double Data Rate SDRAM version5，是一种高性能显卡用内存，需搭配支持PCI-E以上规格的显卡，高频率达4GHZ，低功耗。
-\end{description}
 
-\section{软件配置名词}
-\begin{description}
 \item[UEFI] Unified Extensible Firmware Interface，统一的可扩展固件接口，是一种详细描述类型接口的标准。这种接口用于操作系统自动从预启动的操作环境，加载到一种操作系统上。
 \item[BIOS] Basic Input/Output System，基本输入/输出系统。
 \item[固件] Firmware，固定软件（自己理解），写入EROM或EEPROM中的程序。固件担任着一个系统最基础最底层工作的软件。初期，这些硬件内所保存的程序是无法被用户直接读出或修改的，如今这些是可以重复刷写的，让固件得以修改和升级。
+\item[MRB分区] MRB分区表是将磁盘的分区信息保存到磁盘的第一个扇区（MRB扇区）的64个字节中，每个分区项（文件系统、起始柱面号、磁头号等信息）占有16个字节，因此总共只能记录4个主分区，由于在一个分区项中用4个字节存储分区的总扇区数（$2^{32}$），每扇区512字节($2^{9}B$)，因此每个分区不能超过2TB（$2^{32} \times 2^{9}B=2^{41}B=2TB$）。磁盘容量超过2TB以后，分区的起始位置也就无法表示了。
+\item[GPT分区] GPT分区表是基于可扩展固件借口（EFI）使用的磁盘分区架构，支持每个磁盘可达到128个分区，且最大容量可达18EB。
 \end{description}
 
-\section{环境配置}
 
 
-\subsection{创建RAID5}
-\subsubsection{RAID的优点}
+\section{RAID5}
+\subsection{RAID的优点}
 \begin{itemize}
 \item 可高效恢复磁盘
 \item 增强了速度
 \item 扩容了存储能力
 \end{itemize}
 
-\subsubsection{RAID的分类}
+\subsection{实现RAID方法}
 \begin{description}
 \item[硬RAID] Hardware RAID，通过用硬件（RAID卡或者磁盘阵列）来实现RAID功能。硬件RAID具备了自身的RAID控制/处理与I/O处理芯片，甚至还有阵列缓冲（Array Buffer），对CPU的占用率以及整体性能都是最优势的，但设备成本也是三最高的。Hardware RAID自成一个单元，由自身硬件和软件管理RAID，与主板和操作系统无关，即Ubuntu不需要额外的程序来管理。
 \item[软RAID] Software RAID，通过用操作系统的软件程序（Linux系统下的mdadm命令）来完成RAID功能。软件RAID的所有功能都是操作系统与CPU 来完成，没有第三方的控制/处理与I/O 芯片，与主板BIOS程序无关，其效率与稳定性较低。例如在Ubuntu系统下的软RAID，其格式化、挂载、写入与重建全部由mdadm负责。
 \item[伪RAID] Fake RAID，又称BIOS RAID。通过主板的集成芯片，内建RAID控制器来创建阵列，由操作系统驱动识别（主要表现在Intel Desktop的主板上表现的比较明显）。由于缺乏独立的I/O处理芯片，所以这方面的工作仍要由CPU与驱动程序来完成。另外，Fake RAID所采用的RAID控制/处理芯片的能力一般都比较弱，不能支持高的RAID等级。在Intel集成芯片的主板，主要使用Intel Rapid Storage Technology来管理，该技术主要支持Window系统，不支持Linux系统。在Linux系统下，Intel主要使用dmraid和mdadm来管理RAID，推荐使用mdadm。
 \end{description}
 
-\subsubsection{主板集成RAID与外插RAID卡区别}
+\subsection{主板集成RAID与外插RAID卡区别}
 \begin{description}
 \item[性能] 主板集成的RAID，它的性能以及速度是通过主板的CPU与内存来实现的，它会占有主板一定的带宽，会影响整机的性能；外插RAID卡，有自己的CPU和内存，所以数据处理大部分都会独立处理，不会影响主板上的CPU与内存速度。总体看来，外插的RAID卡的RAID要比主板集成的RAID快得多。
 \item[安全性] 主板集成的RAID，其安全性不能够得到保证，因为是通过更改主板的BIOS选项做成的，所以一旦主板损坏、主板的CMOS电池掉电或无意更改了主板BIOS的设置都会带来RAID的丢失。通过主板做成的RAID，一旦丢失，将会不能恢复，后果是非常严重的；而外插的RAID卡所做成的RAID，不会因为主板损坏、主板的CMOS电池掉电等现象对数据造成影响，所以外插的RAID卡，其安全性远远大于主板集成的。另外，Raid完全由Ubuntu的mdadm命令管理。
 \end{description}
 
 
-\subsubsection{创建RAID5步骤（Fake RAID，在BISO界面）}
+\subsection{实现RAID方法比较}
+在这台DIGITS DevBox的RAID主要是Fake RAID和Software RAID，对别对应的软件是dmraid和mdadm。Intel同时支持dmraid和mdadm，但是更推荐使用mdadm。
+\subsubsection{dmraid}
+\begin{itemize}
+\item dmraid主要是属于Fake RAID来创建、管理RAIDd的。在启动时候，由主板上的芯片驱动RAID，当载入Linux内核之后，由Linux接手管理，消耗cpu和内存等资源\footnote{http://www.cnblogs.com/linuxer/archive/2012/03/07/2441224.html}。在Ubuntu系统中，dmraid主要是将硬件的RAID映射成系统中/dev/mapper/目录下的设备，例如/dev/mapper/isw\_dfadcda\_Volume1，其中isw为intel的硬件名字，Volume1为RAID名称\footnote{http://book.51cto.com/art/200902/110754.htm}。
+\item 在BIOS创建的RAID，在Ubuntu系统中，可能会出现大容量硬盘识别不正确的问题。例如，在BIOS中创建的3 个3.6TB的硬盘组成的RAID5，理论上应该为7.2TB，但是Ubuntu系统只能识别为3.6TB，容量偏小，而Ubuntu Server和Debian甚至都无法识别，不显示。
+\item 不推荐使用dmraid命令。首先，dmraid从2011年已经不提供更新了，而mdadm仍然不测试和更新；其实，dmraid对于大容量硬盘的识别容易出错，如今的硬盘都是1TB以上的，对于dmraid很容易造成错误；最后，dmraid是将RAID映射成mapper，无法真正实现RAID数据恢复等高级功能。
+\end{itemize}
+
+\subsubsection{mdadm}
+\begin{itemize}
+\item 在linux系统中目前以MD(Multiple Devices)虚拟块设备的方式实现软件RAID，利用多个底层的块设备虚拟出一个新的虚拟设备，即使用mdadm命令\footnote{http://blog.csdn.net/yuesichiu/article/details/8502680}。
+\item Fake RAID只提供廉价的控制器，RAID处理开销仍由CPU和内存负责，因此性能与效率基本与Software RAID基本一直。对于Linux系统，使用Software RAID一般比Fake RAID更稳定和安全\footnote{http://blog.163.com/jiangh\_1982/blog/static/12195052014252131760/}。
+\item Ubuntu的软RAID相关命令为mdadm，其配置、测试、删除参考\footnote{http://blog.itpub.net/27771627/viewspace-1246416/}。 
+\item \textbf{在没有Hardware RAID的条件下，推荐使用mdadm实现RAID}。
+\end{itemize}
+
+
+\subsection{创建RAID5步骤（Ubuntu下Software RAID，推荐！！！）}
+在Ubuntu系统中，通常使用mdadm，即Software RAID方法来创建RAID5\footnote{http://blog.itpub.net/27771627/viewspace-1246416/}
 \begin{enumerate}
-\item 初始化，对各个磁盘删除分区（fdisk命令），且进行格式化（mkfs命令）。小容量硬盘（不到2TB）使用MRB分区表，大容量硬盘（2TB以上）使用GPT分区，\footnote{http://wangheng.org/shi-yong-parted-chuang-jian-gpt-fen-qu.html}。
+\item \textbf{安装mdadm，查看实际磁盘情况}。
+\begin{bash}
+sudo apt-get install mdadm
+sudo fdisk -l
+\end{bash}
+\item \textbf{初始化}。。对各个磁盘删除分区（fdisk命令），且进行格式化（mkfs命令）。小容量硬盘（不到2TB）使用MRB分区表，大容量硬盘（2TB以上）使用GPT分区\footnote{http://wangheng.org/shi-yong-parted-chuang-jian-gpt-fen-qu.html}。
 \begin{bash}
 sudo fdisk -l		   #查看磁盘空间以及分区
 sudo fdisk /dev/sdX  #用fdisk对某块硬盘处理，/dev/sdX中X表示磁盘号，例如/dev/sdb
 sudo mkfs.ext4 /dev/sdX    #用mkfs将/dev/sdX格式化为ext4格式
 sudo parted /dev/sdX	#用parted工具对大容量硬盘分区，为GPT分区
 \end{bash}
-MRB分区表是将磁盘的分区信息保存到磁盘的第一个扇区
-\item 创建，create
-\item 分配，
-\item 格式化 sudo mkfs.ext4 /dev/sdb
-\item 挂载 sudo /dev/mapper/isw\_dfafd\_Volume1 /deep
-\item 自动挂载 sudo vim /etc/fstab
+\item \textbf{创建RAID5}
+\begin{bash}
+sudo fdisk -l		   #查看磁盘空间以及分区
+sudo fdisk /dev/sdX  #用fdisk对某块硬盘处理，/dev/sdX中X表示磁盘号，例如/dev/sdb
+sudo mdadm -C /dev/md0 -l5 -n3 /dev/sdb1 /dev/sdb /dev/sdc /dev/sdd   #sdb，sdc和sdd为磁盘，md0为创建好的RAID盘
+sudo parted /dev/sdX	#用parted工具对大容量硬盘分区，为GPT分区
+\end{bash}
+\item \textbf{格式化}
+\begin{bash}
+cat /proc/mdstat	#查看RAID恢复进度
+sudo mdadm -D /dev/md0  #查看RAID详细情况
+\end{bash} 
+\item \textbf{挂载}
+\begin{bash}
+sudo mkdir /deep		#在/目录下创建/deep
+sudo mount /dev/md0 /deep  	#将md0挂载到/deep下
+\end{bash} 
+\item \textbf{自动挂载}。将/dev/md0 /deep ext4 defaults 1 2，写入/etc/fstab。建议重启后再查看RAID的磁盘号，可能我们创建的盘号为md0，但是重启后显示为md127，如果将之前的/dev/md0直接写入/etc/fstab，如果出错，可能导致重启出现问题。
+\begin{bash}
+sudo vim /etc/fstab 
+\end{bash}
 \end{enumerate}
 
-可能出现问题
-\begin{itemize}
-\item 在装系统过程中，在选择系统分区时，ctrl+alt+F1，输入dmraid -ay激活RAID（Ubuntu server） 这种方式其实还是属于介于软raid与硬raid之间。在启动时候，由硬件raid驱动，当载入linux内核之后，由linux接手管理，还是会消耗cpu等资源。与更传统的软件raid比较，就是启动的时候（linux内核未介入之前）系统看到的仍然是一个raid的虚拟硬盘，所以两快硬盘完全一样，要恢复重建之类的更加简单。另外的话，dmraid映射了底层的硬件raid驱硬件控制器，raid控制可能也能帮助处理一些操作，可能对性能也会有一定提高。 
-\item dmraid将硬件的raid映射成/dev/mapper/下面的设备，例如/dev/mapper/isw\_dfadcda\_Volume1，其中isw为intel的硬件名字，Volume1为RAID名称。Ubuntu在安装过程中，已经将RAID显示为/dev/mapper/isw\_dfadcda\_Volume1，已经显示正确了，只不过容量出现问题，理论上的容量应该为7.2TB，但是实际情况只有3.6TB（至今未解开）。dmraid对于大容量硬盘的识别经常会出现问题（1TB识别为800G）
-\item dmraid可参考http://www.cnblogs.com/linuxer/archive/2012/03/07/2441224.html
-http://book.51cto.com/art/200902/110754.htm
-\item Ubuntu的软RAID相关命令为mdadm，其配置、测试、删除参考http://blog.itpub.net/27771627/viewspace-1246416/
-\item 目前使用的RAID为主板的Intel Rapid Storage Technology，目前驱动只支持Window，对Windows的兼容性不好，为fakeraid
-\item fake raid仅提供廉价的控制器，raid处理开销仍由CPU负责，因此性能与CPU占用基本与software raid持平。 如果只有单个linux系统，使用software raid一般比fake raid更健壮，但是，在多启动环境中(例如windows与linux双系统)，为了使各个系统都能正确操作相同的raid分区，就必须使用fake raid了。 http://blog.163.com/jiangh\_1982/blog/static/12195052014252131760/
-\end{itemize}
 
-DIGITS的RAID5在各种环境下的测试，目前主板集成的RAID功能，即Intel@ Rapid Storage Technology，在linux下主要使用的是DM RAID和MD RAID，也就是dmraid和mdadm命令。DM RAID (dmraid)，但是mdadm是比较新的应用。但是dmraid已经几年没更新了，而mdadm经过几年的测试，在工业界更受欢迎。mdadm在Window下有UI界面，在Linux下只有命令行，其产生的中间数据支持两个系统下，可用在双系统环境下。在单Linux系统下，使用mdadm比较合适。
 
-只有dmraid的情况下，BIOS已创建RAID5
-\begin{itemize}
-\item Ubuntu识别/dev/mapper/isw\_dafadfadsf\_Volume1，只有3.6TB 
-\item Ubuntu server无法用dmraid激活mapper，所以无法显示
-\item Debian不识别
-\end{itemize}
-
-有mdadm的情况下，BIOS已创建RAID5，ubuntu系统下mdadm不创建RAID
-\begin{itemize}
-\item Ubuntu识别/dev/mapper/isw\_dafadfadsf\_Volume1，只有3.6TB 
-\item Ubuntu server无法用dmraid激活mapper，所以无法显示
-\item Debian不识别
-\end{itemize}
-
-有mdadm，BIOS不创建RAID5，Ubuntu系统下mdadm创建RAID
-\begin{itemize}
-\item Ubuntu不识别8TB的RAID5
-\item Ubuntu server识别RAID5为8TB
-\item Debian识别RAID5为8TB
-\end{itemize}
-
-因此，在现在Ubuntu14.04的系统下，决定使用mdadm创建软RAID
 
 \section{其他工作}
 \subsection{显卡驱动安装}
@@ -433,5 +437,77 @@ DIGITS的RAID5在各种环境下的测试，目前主板集成的RAID功能，�
 	\end{enumerate}
 \item 启动图形环境，sudo start lightdm
 \end{enumerate}
+
+\subsection{创建RAID5步骤（Fake RAID，在BISO界面）}
+\begin{enumerate}
+\item \textbf{确认主板芯片组是否支持RAID功能}。
+\item \textbf{初始化}。对各个磁盘删除分区（fdisk命令），且进行格式化（mkfs命令）。小容量硬盘（不到2TB）使用MRB分区表，大容量硬盘（2TB以上）使用GPT分区\footnote{http://wangheng.org/shi-yong-parted-chuang-jian-gpt-fen-qu.html}。
+\begin{bash}
+sudo fdisk -l		   #查看磁盘空间以及分区
+sudo fdisk /dev/sdX  #用fdisk对某块硬盘处理，/dev/sdX中X表示磁盘号，例如/dev/sdb
+sudo mkfs.ext4 /dev/sdX    #用mkfs将/dev/sdX格式化为ext4格式
+sudo parted /dev/sdX	#用parted工具对大容量硬盘分区，为GPT分区
+\end{bash}
+\item \textbf{在BIOS程序中设置RAID}。在Advanced Mode下，在状态栏中点击Advanced，选择PCH Storage Configuration，将SATA Controller 1 Mode Seletion设置为RAID。（只有Controller 1支持RAID模式）
+\item \textbf{进入Intel Rapid Storage Technology（Intel RST）}。如果系统运行开机自检（POST）时，按下<Ctrl>+<I>进入程序界面进行管理。否则，在BIOS界面中，选择Intel Rapid Storage Technology为On后，重启再进入BIOS，在Advanced Mode选项中，在状态栏中点击Advanced，在底部可看到Intel Rapid Storage Technology的选项，点击进入设置。
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.4\textwidth]{raid}
+\end{figure}
+\item \textbf{创建RAID}。选择Create RAID Volume。
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.4\textwidth]{creat_raid}
+\end{figure}
+\item \textbf{设置RAID}。选中上图的选项中的Disks，显示下图。选择硬盘创建RAID。
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.4\textwidth]{select_raid}
+\end{figure}
+\item 创建成功的RAID，如图。RAID的status比较重要，应为Normal，如果出现Rebuild、Degrade、Failed等，请重新创建。
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.4\textwidth]{delete_raid}
+\end{figure}
+\item \textbf{格式化}。进入Ubuntu系统后，在/dev/mapper/下可看到RAID5被映射成为isw\_dfafd\_Volume1。将其格式化为Ext4文件系统。（对于大容量的硬盘的识别会出现问题，会显得比理论容量小；在Window系统下，不会出现这中情况。）
+\begin{bash}
+sudo mkfs.ext4 /dev/mapper/isw\_dfafd\_Volume1
+\end{bash}
+\item \textbf{挂载}。将格式化好的映射硬盘，挂载到/deep目录下。
+\begin{bash}
+sudo mkdir /deep
+sudo /dev/mapper/isw\_dfafd\_Volume1 /deep
+\end{bash}
+\item \textbf{自动挂载}。为了重启后，直接使用映射硬盘，让其自动挂载。按照格式进入/etc/fstab
+\begin{bash}
+sudo vim /etc/fstab
+\end{bash}
+\end{enumerate}
+
+\subsection{RAID5实验情况}
+DIGITS的RAID5在各种环境下的测试，目前主板集成的RAID功能，即Intel Rapid Storage Technology，在linux下主要使用的是DM RAID和MD RAID，也就是dmraid和mdadm命令。DM RAID (dmraid)，但是mdadm是比较新的应用。但是dmraid已经几年没更新了，而mdadm经过几年的测试，在工业界更受欢迎。mdadm在Window下有UI界面，在Linux下只有命令行，其产生的中间数据支持两个系统下，可用在双系统环境下。在单Linux系统下，使用mdadm比较合适。
+
+只有dmraid的情况下，BIOS已创建RAID5
+\begin{itemize}
+\item Ubuntu识别/dev/mapper/isw\_dafadfadsf\_Volume1，只有3.6TB 
+\item Ubuntu server无法用dmraid激活mapper，所以无法显示
+\item Debian不识别
+\end{itemize}
+
+有mdadm的情况下，BIOS已创建RAID5，ubuntu系统下mdadm不创建RAID
+\begin{itemize}
+\item Ubuntu识别/dev/mapper/isw\_dafadfadsf\_Volume1，只有3.6TB 
+\item Ubuntu server无法用dmraid激活mapper，所以无法显示
+\item Debian不识别
+\end{itemize}
+
+有mdadm，BIOS不创建RAID5，Ubuntu系统下mdadm创建RAID
+\begin{itemize}
+\item Ubuntu不识别8TB的RAID5
+\item Ubuntu server识别RAID5为8TB
+\item Debian识别RAID5为8TB
+\end{itemize}
+
+因此，在现在Ubuntu14.04的系统下，决定使用mdadm创建软RAID
 %%---------------------------------------------------------------------
 \end{document}
