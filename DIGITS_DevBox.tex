@@ -307,7 +307,10 @@ RAID功能：支持RAID 0，1，5，10
 \item[MRB分区] MRB分区表是将磁盘的分区信息保存到磁盘的第一个扇区（MRB扇区）的64个字节中，每个分区项（文件系统、起始柱面号、磁头号等信息）占有16个字节，因此总共只能记录4个主分区，由于在一个分区项中用4个字节存储分区的总扇区数（$2^{32}$），每扇区512字节($2^{9}B$)，因此每个分区不能超过2TB（$2^{32} \times 2^{9}B=2^{41}B=2TB$）。磁盘容量超过2TB以后，分区的起始位置也就无法表示了。
 \item[GPT分区] GPT分区表是基于可扩展固件借口（EFI）使用的磁盘分区架构，支持每个磁盘可达到128个分区，且最大容量可达18EB。
 \item[cuDNN] CUDA Deep Neural Network library\footnote{http://devblogs.nvidia.com/parallelforall/accelerate-machine-learning-cudnn-deep-neural-network-library/}，是专门针对Deep Learning框架设计的一套GPU计算加速方案，使工作者投入与设计和训练神经网络模型，而不用在底层的表现上话费时间。目前支持的DL工具包括caffe，Theano和Torch等。cuDNN的Realease版本有cuDNN v1，cuDNN v2 for CUDA 6.5 and later 和cuDNN v3 for CUDA 7.0 and later.
-\item[CUDA]
+\item[CUDA] Compute Unified Device Architecture，是一种由NVIDIA推出的通用并行计算架构，该架构使GPU能够解决商业、工业以及科学方面的复杂计算问题。在架构上采用了一种全新的计算体系结构来使用GPU提供的硬件资源，从而给大规模的数据计算应用提供了一种比CPU更加强大的计算能力，即将显卡中的充分使用GPU来解决大量数据计算问题。开发人员可使用C语言来为CUDA架构编写程序，所编写出的程序可在支持CUDA的处理器上以超高性能运行。CUDA3.0已经开始支持C++和FORTRAN。
+\item[CUDA Toolkit] CUDA Toolkit是进行CUDA开发所需要的一个软件。它通过GPU加速技术，给C和C++开发者提供了一个综合的开发环境。CUDA Toolkit包括NVIDIA GPUs编译器，数学库以及debug和优化。
+\item[HDF] Hierarchical Data Format，可以存储不同类型的图像和数码数据的文件格式，并且可以在不同类型的机器上传输，同时还有统一处理这种文件格式的函数库。大多数普通计算机都支持这种文件格式。文件格式是指计算机存储和处理数据的方式 。目前常用的图像文件格式很多, 如 GIF、JPG等 ，其共同的缺点是结构太简单 ,不能存放除影像信息外其他的有用数据 ,像遥感影像的坐标值、参数等都无法保存，而且用不同格式存储影像数据使得读取、传输、共享变得复杂, 因此，有必要建立一种标准格式以解决上述问题。
+\item[HDF5] HDF5能处理更多的对象 ,存储更大的文件 ,支持并行 I/O ,线程和具备现代操作系统与应用程序所要求的其他特性, 而且数据模型变得更简单 ,概括性更强。HDF5 只有两种基本结构 :组(group)和数据集(dataset)。
 \end{description}
 
 
@@ -445,8 +448,8 @@ cd digits-2.0
 \begin{bash}
 sudo ./NVIDIA-Linux-x86_64-355.06.run --unisntall
 \end{bash}
-\item 目前（2015.08.26）的从caffe的Github上下载的caffe-master是有问题的，因为很多文件格式改为了*.h5，这是HDF5格式。没有依赖文件的话，Ubuntu暂时不支持。如果碰到如果问题，将*.h5格式全去掉.h5，改为二进制格式则正常运行。例如在caffer-master/examples/cifar10/train\_quick.sh，caffer-master/examples/cifar10/train\_quick.sh与caffer-master/examples/imagenet/train.sh
-\item 在Github的Caffe库里的release版本存在很多错误，例如caffe-rc2，或许是编译或者安装问题，总之尽量用当前提供的Caffe版本。
+\item 目前（2015.08.26）的从caffe的Github上下载的caffe-master是有问题的，因为很多文件格式改为了*.h5，这是HDF5格式。没有依赖文件的话，Ubuntu暂时不支持。如果碰到如果问题，将*.h5格式全去掉.h5，改为二进制格式则正常运行。例如在caffer-master/examples/cifar10/train\_quick.sh，caffer-master/examples/cifar10/train\_quick.sh与caffer-master/examples/imagenet/train\_caffenet.sh。目前该问题只能通过这个方法解决，但是在将来可以查看、安装\href{https://github.com/live-clones/hdf5}{HDF5}来尝试解决问题。
+\item 在Github的Caffe库里的release版本存在很多错误，例如caffe-rc2，或许是编译或者安装问题，总之尽量使用最新的或者服务器上的Caffe版本。
 \end{itemize}
 
 \section{其他工作}
