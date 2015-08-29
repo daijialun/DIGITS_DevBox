@@ -15,7 +15,7 @@
 \maketitle
 %\tableofcontents 
 \section{硬件配置}
-实验室所组装的DIGITS DevBox深度学习服务器，以下是其具体硬件配置。这台服务器的原型为NVIDIA官方生产的\href{https://developer.nvidia.com/devbox}{DIGITS DevBox}，可参考其配置。
+实验室所组装的DIGITS DevBox深度学习服务器，其具体硬件配置如下。这台服务器的原型为NVIDIA官方生产的\href{https://developer.nvidia.com/devbox}{DIGITS DevBox}，可参考其配置。
 \begin{description}
 \item[显卡] 4个ASUS（华硕）GTX 980Ti-6GD5
 \definecolor{shadecolor}{rgb}{0.92,0.92,0.92}  
@@ -236,44 +236,55 @@ RAID功能：支持RAID 0，1，5，10
 \section{名词解释}
 \begin{description}
 
-\item[DVI] Digital Visual Interface，数字视频接口
+\item[DVI] Digital Visual Interface，数字视频接口，如Figure~\ref{fig:dvi}。
 \begin{figure}[!h]
 \centering
 \includegraphics[width=0.2\textwidth]{DVI}
+\caption{DVI接口}
+\label{fig:dvi}
 \end{figure}
 
-\item[DislayPort] 高清数字显示借口标准
+\item[DisplayPort] 高清数字显示借口标准，如Figure~\ref{fig:displayport}。
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.2\textwidth]{DisplayPort}
+\caption{DisplayPort接口}
+\label{fig:displayport}
 \end{figure}
 
-\item[PCI-E] PCI Express，新的总线接口
+\item[PCI-E] PCI Express，PCI型总线接口，如Figure~\ref{fig:pci}。
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=0.2\textwidth]{PCI-E}
+\includegraphics[width=0.4\textwidth]{PCI-E}
+\caption{PCI-E接口}
+\label{fig:pci}
 \end{figure}
 
-\item[SATA Revision 3.0] Serial Advanced Technology Attachment，串行ATA规格第三版,6Gbps
+\item[SATA Revision 3.0] Serial Advanced Technology Attachment，6Gbps，如Figure~\ref{fig:sata3}。
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=0.2\textwidth]{SATA3}
+\includegraphics[width=0.3\textwidth]{SATA3}
+\caption{SATA 3.0接口}
+\label{fig:sata3}
 \end{figure}
 
-\item[SATA EXpress] SATA 3.0下一代的SATA接口，10Gbps
+\item[SATA EXpress] SATA 3.0下一代的SATA接口，10Gbps，如Figure~\ref{fig:satae}。
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=0.2\textwidth]{SATAE}
+\includegraphics[width=0.3\textwidth]{SATAE}
+\caption{SATA-E接口}
+\label{fig:satae}
 \end{figure}
 
-\item[M.2] 一种替代MSATA新的接口规范，优势体现在速度和体积。支持Socket2和Socket3两种接口类型
+\item[M.2] 一种替代MSATA新的接口规范，优势体现在速度和体积。支持Socket2和Socket3两种接口类型，如Figure~\ref{fig:m2}。
 \begin{figure}[!ht]
   \centering 
   \subfigure[]{ 
-    \includegraphics[width=0.23\textwidth]{M2}} 
+    \includegraphics[width=0.33\textwidth]{M2}} 
   \subfigure[]{ 
-    \includegraphics[width=0.17\textwidth]{M2-MSATA}} 
-  \caption{}
+    \includegraphics[width=0.24\textwidth]{M2-MSATA}} 
+  \caption{M.2接口}
+  \label{fig:m2}
 \end{figure}
 
 \item[RAID] Redundant Arrays of Independent Disks，磁盘阵列。磁盘阵列是由很多价格较便宜的磁盘，组合成一个容量巨大的磁盘组，利用个别磁盘提供数据所产生加成效果提升整个磁盘系统效能。利用这项技术，将数据切割成许多区段，分别存放在各个硬盘上。
@@ -283,19 +294,22 @@ RAID功能：支持RAID 0，1，5，10
     \includegraphics[width=0.24\textwidth]{RAID1}} 
   \subfigure[]{ 
     \includegraphics[width=0.15\textwidth]{RAID2}} 
-  \caption{}
+  \caption{RAID}
 \end{figure}
 
-\item[RAID5] 一种存储性能、数据安全和存储成本兼顾的存储解决方案。为系统提供数据安全保障，但保障程度要比Mirror低而磁盘空间利用率要比Mirror高。数据以块为单位分布到各个硬盘上。RAID 5不对数据进行备份，而是把数据和与其相对应的奇偶校验信息存储到组成RAID5的各个磁盘上，并且奇偶校验信息和相对应的数据分别存储于不同的磁盘上。当RAID5的一个磁盘数据损坏后，利用剩下的数据和相应的奇偶校验信息去恢复被损坏的数据。
+\item[RAID5] 一种存储性能、数据安全和存储成本兼顾的存储解决方案。为系统提供数据安全保障，但保障程度要比Mirror低，而磁盘空间利用率要比Mirror高。数据以块为单位分布到各个硬盘上。RAID 5不对数据进行备份，而是把数据和与其相对应的奇偶校验信息存储到组成RAID5的各个磁盘上，并且奇偶校验信息和相对应的数据分别存储于不同的磁盘上。当RAID5的一个磁盘数据损坏后，利用剩下的数据和相应的奇偶校验信息去恢复被损坏的数据。
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.4\textwidth]{RAID5}
+\caption{RAID5}
 \end{figure}
 
-\item[SLI] Scalable Link Interface，可灵活伸缩的连接接口（支持多显卡技术）。这是一种可把两张或以上的显卡连在一起，作单一输出使用的技术，从而达至绘图处理效能加强的效果。
+\item[SLI] Scalable Link Interface，可灵活伸缩的连接接口（支持多显卡技术）\footnote{http://www.geforce.cn/whats-new/guides/introduction-to-sli-technology-guide\#1}。这是一种可把两张或以上的显卡连在一起，作单一输出使用的技术，从而达至绘图处理效能加强的效果，如Figure~\ref{fig:sli}。
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.2\textwidth]{SLI}
+\caption{SLI技术}
+\label{fig:sli}
 \end{figure}
 
 \item[DDR4] Dual Data Rate SDRAM，是一种高速CMOS动态随即访问的内存。DDR4支持2133MHz，32GB DDR4-2133达到48.4GB/s。
@@ -303,15 +317,25 @@ RAID功能：支持RAID 0，1，5，10
 \item[GDDR5] Graphics Double Data Rate SDRAM version5，是一种高性能显卡用内存，需搭配支持PCI-E以上规格的显卡，高频率达4GHZ，低功耗。
 
 \item[UEFI] Unified Extensible Firmware Interface，统一的可扩展固件接口，是一种详细描述类型接口的标准。这种接口用于操作系统自动从预启动的操作环境，加载到一种操作系统上。
-\item[BIOS] Basic Input/Output System，基本输入/输出系统。
-\item[固件] Firmware，固定软件（自己理解），写入EROM或EEPROM中的程序。固件担任着一个系统最基础最底层工作的软件。初期，这些硬件内所保存的程序是无法被用户直接读出或修改的，如今这些是可以重复刷写的，让固件得以修改和升级。
-\item[MRB分区] MRB分区表是将磁盘的分区信息保存到磁盘的第一个扇区（MRB扇区）的64个字节中，每个分区项（文件系统、起始柱面号、磁头号等信息）占有16个字节，因此总共只能记录4个主分区，由于在一个分区项中用4个字节存储分区的总扇区数（$2^{32}$），每扇区512字节($2^{9}B$)，因此每个分区不能超过2TB（$2^{32} \times 2^{9}B=2^{41}B=2TB$）。磁盘容量超过2TB以后，分区的起始位置也就无法表示了。
+
+\item[BIOS] Basic Input/Output System，基本输入/输出系统。计算机启动时，最先加载的ROM程序，不可擦写。
+
+\item[固件] Firmware，固定软件，写入EROM或EEPROM中的程序。固件担任着一个系统最基础最底层工作的软件。初期，这些硬件内所保存的程序是无法被用户直接读出或修改的，如今这些是可以重复刷写的，让固件得以修改和升级。
+
+\item[MRB分区] MRB分区表是将磁盘的分区信息保存到磁盘的第一个扇区（MRB扇区）的64个字节中，每个分区项（文件系统、起始柱面号、磁头号等信息）占有16个字节，因此总共只能记录4个主分区。由于在一个分区项中用4个字节存储分区的总扇区数（$2^{32}$），每扇区512字节($2^{9}B$)，因此每个分区不能超过2TB（$2^{32} \times 2^{9}B=2^{41}B=2TB$）。磁盘容量超过2TB以后，分区的起始位置也就无法表示了。
+
 \item[GPT分区] GPT分区表是基于可扩展固件借口（EFI）使用的磁盘分区架构，支持每个磁盘可达到128个分区，且最大容量可达18EB。
-\item[cuDNN] CUDA Deep Neural Network library\footnote{http://devblogs.nvidia.com/parallelforall/accelerate-machine-learning-cudnn-deep-neural-network-library/}，是专门针对Deep Learning框架设计的一套GPU计算加速方案，使工作者投入与设计和训练神经网络模型，而不用在底层的表现上话费时间。目前支持的DL工具包括caffe，Theano和Torch等。cuDNN的Realease版本有cuDNN v1，cuDNN v2 for CUDA 6.5 and later 和cuDNN v3 for CUDA 7.0 and later.
+
+\item[cuDNN] CUDA Deep Neural Network library\footnote{http://devblogs.nvidia.com/parallelforall/accelerate-machine-learning-cudnn-deep-neural-network-library/}，是专门针对Deep Learning框架设计的一套GPU计算加速方案，使工作者投入与设计和训练神经网络模型，而不用在底层的表现上花费时间。目前支持的DL工具包括caffe，Theano和Torch等。cuDNN的Realease版本有cuDNN v1，cuDNN v2 for CUDA 6.5 and later 和cuDNN v3 for CUDA 7.0 and later。
+
 \item[CUDA] Compute Unified Device Architecture，是一种由NVIDIA推出的通用并行计算架构，该架构使GPU能够解决商业、工业以及科学方面的复杂计算问题。在架构上采用了一种全新的计算体系结构来使用GPU提供的硬件资源，从而给大规模的数据计算应用提供了一种比CPU更加强大的计算能力，即将显卡中的充分使用GPU来解决大量数据计算问题。开发人员可使用C语言来为CUDA架构编写程序，所编写出的程序可在支持CUDA的处理器上以超高性能运行。CUDA3.0已经开始支持C++和FORTRAN。
+
 \item[CUDA Toolkit] CUDA Toolkit是进行CUDA开发所需要的一个软件。它通过GPU加速技术，给C和C++开发者提供了一个综合的开发环境。CUDA Toolkit包括NVIDIA GPUs编译器，数学库以及debug和优化。
-\item[HDF] Hierarchical Data Format，可以存储不同类型的图像和数码数据的文件格式，并且可以在不同类型的机器上传输，同时还有统一处理这种文件格式的函数库。大多数普通计算机都支持这种文件格式。文件格式是指计算机存储和处理数据的方式 。目前常用的图像文件格式很多, 如 GIF、JPG等 ，其共同的缺点是结构太简单 ,不能存放除影像信息外其他的有用数据 ,像遥感影像的坐标值、参数等都无法保存，而且用不同格式存储影像数据使得读取、传输、共享变得复杂, 因此，有必要建立一种标准格式以解决上述问题。
-\item[HDF5] HDF5能处理更多的对象 ,存储更大的文件 ,支持并行 I/O ,线程和具备现代操作系统与应用程序所要求的其他特性, 而且数据模型变得更简单 ,概括性更强。HDF5 只有两种基本结构 :组(group)和数据集(dataset)。
+
+\item[HDF] Hierarchical Data Format，可以存储不同类型的图像和数码数据的文件格式，并且可以在不同类型的机器上传输，同时还有统一处理这种文件格式的函数库。大多数普通计算机都支持这种文件格式。文件格式是指计算机存储和处理数据的方式。目前常用的图像文件格式很多, 如 GIF、JPG等，其共同的缺点是结构太简单，不能存放除影像信息外其他的有用数据，像遥感影像的坐标值、参数等都无法保存，而且用不同格式存储影像数据使得读取、传输、共享变得复杂。因此，有必要建立一种标准格式以解决上述问题。
+
+\item[HDF5] HDF5能处理更多的对象，存储更大的文件，支持并行 I/O，线程和具备现代操作系统与应用程序所要求的其他特性，而且数据模型变得更简单，概括性更强。HDF5只有两种基本结构：组(group)和数据集(dataset)。
+
 \item[DIGITS] NVIDIA Deep Learning GPU Training System，通过对数据实行可视化的实时检测，让开发者快速设计出深度神经网络。DIGITS最大的特点是，你不需要写任何的代码就可快速上手DIGITS。DIGITS是通过网络浏览器来进入的网页应用。
 \end{description}
 
@@ -327,32 +351,40 @@ RAID功能：支持RAID 0，1，5，10
 
 \subsection{实现RAID方法}
 \begin{description}
-\item[硬RAID] Hardware RAID，通过用硬件（RAID卡或者磁盘阵列）来实现RAID功能。硬件RAID具备了自身的RAID控制/处理与I/O处理芯片，甚至还有阵列缓冲（Array Buffer），对CPU的占用率以及整体性能都是最优势的，但设备成本也是三最高的。Hardware RAID自成一个单元，由自身硬件和软件管理RAID，与主板和操作系统无关，即Ubuntu不需要额外的程序来管理。
+\item[硬RAID] Hardware RAID，通过用硬件（RAID卡或者磁盘阵列）来实现RAID功能。硬件RAID具备了自身的RAID控制/处理与I/O处理芯片，甚至还有阵列缓冲（Array Buffer），对CPU的占用率以及整体性能都是最优势的，但设备成本也是三种方法中最高的。Hardware RAID自成一个单元，由自身硬件和软件管理RAID，与主板和操作系统无关，即Ubuntu系统不需要额外的程序来管理。
+
 \item[软RAID] Software RAID，通过用操作系统的软件程序（Linux系统下的mdadm命令）来完成RAID功能。软件RAID的所有功能都是操作系统与CPU 来完成，没有第三方的控制/处理与I/O 芯片，与主板BIOS程序无关，其效率与稳定性较低。例如在Ubuntu系统下的软RAID，其格式化、挂载、写入与重建全部由mdadm负责。
-\item[伪RAID] Fake RAID，又称BIOS RAID。通过主板的集成芯片，内建RAID控制器来创建阵列，由操作系统驱动识别（主要表现在Intel Desktop的主板上表现的比较明显）。由于缺乏独立的I/O处理芯片，所以这方面的工作仍要由CPU与驱动程序来完成。另外，Fake RAID所采用的RAID控制/处理芯片的能力一般都比较弱，不能支持高的RAID等级。在Intel集成芯片的主板，主要使用Intel Rapid Storage Technology来管理，该技术主要支持Window系统，不支持Linux系统。在Linux系统下，Intel主要使用dmraid和mdadm来管理RAID，推荐使用mdadm。
+
+\item[伪RAID] Fake RAID，又称BIOS RAID。通过主板的集成芯片，内建RAID控制器来创建阵列，由操作系统驱动识别（主要表现在Intel Desktop的主板上表现的比较明显）。由于缺乏独立的I/O处理芯片，所以这方面的工作仍要由CPU与驱动程序来完成。另外，Fake RAID所采用的RAID控制/处理芯片的能力一般都比较弱，不能支持高的RAID等级。在Intel集成芯片的主板，主要使用Intel Rapid Storage Technology来管理，该技术主要支持Window系统，不支持Linux系统。在Linux系统下，Intel主要使用dmraid和mdadm来管理RAID，\textbf{推荐使用mdadm}。
 \end{description}
 
 \subsection{主板集成RAID与外插RAID卡区别}
 \begin{description}
-\item[性能] 主板集成的RAID，它的性能以及速度是通过主板的CPU与内存来实现的，它会占有主板一定的带宽，会影响整机的性能；外插RAID卡，有自己的CPU和内存，所以数据处理大部分都会独立处理，不会影响主板上的CPU与内存速度。总体看来，外插的RAID卡的RAID要比主板集成的RAID快得多。
-\item[安全性] 主板集成的RAID，其安全性不能够得到保证，因为是通过更改主板的BIOS选项做成的，所以一旦主板损坏、主板的CMOS电池掉电或无意更改了主板BIOS的设置都会带来RAID的丢失。通过主板做成的RAID，一旦丢失，将会不能恢复，后果是非常严重的；而外插的RAID卡所做成的RAID，不会因为主板损坏、主板的CMOS电池掉电等现象对数据造成影响，所以外插的RAID卡，其安全性远远大于主板集成的。另外，Raid完全由Ubuntu的mdadm命令管理。
+\item[性能] 主板集成的RAID，它的性能以及速度是通过主板的CPU与内存来实现的，它会占有主板一定的带宽，会影响整机的性能；外插RAID卡，有自己的CPU和内存，所以数据处理大部分都会独立处理，不会影响主板上的CPU与内存速度。总体看来，外插的RAID卡的RAID在功能和速度上，都优于主板集成。
+
+\item[安全性] 主板集成的RAID，其安全性不能够得到保证，因为是通过更改主板的BIOS选项做成的，所以一旦主板损坏、主板的CMOS电池掉电或无意更改了主板BIOS的设置都会带来RAID的丢失。通过主板做成的RAID，一旦丢失，将会不能恢复，后果是非常严重的；而外插的RAID卡所做成的RAID，不会因为主板损坏、主板的CMOS电池掉电等现象对数据造成影响，所以外插的RAID卡，其安全性远远大于主板集成的。
 \end{description}
 
 
 \subsection{实现RAID方法比较}
-在这台DIGITS DevBox的RAID主要是Fake RAID和Software RAID，对别对应的软件是dmraid和mdadm。Intel同时支持dmraid和mdadm，但是更推荐使用mdadm。
+在这台DIGITS DevBox服务器的RAID主要是Fake RAID和Software RAID，分别对应的软件是dmraid和mdadm。Intel同时支持dmraid和mdadm，\textbf{但是更推荐使用mdadm}。
 \subsubsection{dmraid}
 \begin{itemize}
 \item dmraid主要是属于Fake RAID来创建、管理RAIDd的。在启动时候，由主板上的芯片驱动RAID，当载入Linux内核之后，由Linux接手管理，消耗cpu和内存等资源\footnote{http://www.cnblogs.com/linuxer/archive/2012/03/07/2441224.html}。在Ubuntu系统中，dmraid主要是将硬件的RAID映射成系统中/dev/mapper/目录下的设备，例如/dev/mapper/isw\_dfadcda\_Volume1，其中isw为intel的硬件名字，Volume1为RAID名称\footnote{http://book.51cto.com/art/200902/110754.htm}。
+
 \item 在BIOS创建的RAID，在Ubuntu系统中，可能会出现大容量硬盘识别不正确的问题。例如，在BIOS中创建的3 个3.6TB的硬盘组成的RAID5，理论上应该为7.2TB，但是Ubuntu系统只能识别为3.6TB，容量偏小，而Ubuntu Server和Debian甚至都无法识别，不显示。
-\item 不推荐使用dmraid命令。首先，dmraid从2011年已经不提供更新了，而mdadm仍然不测试和更新；其实，dmraid对于大容量硬盘的识别容易出错，如今的硬盘都是1TB以上的，对于dmraid很容易造成错误；最后，dmraid是将RAID映射成mapper，无法真正实现RAID数据恢复等高级功能。
+
+\item \textbf{不推荐使用dmraid命令}。首先，dmraid从2011年已经不提供更新了，而mdadm仍然不测试和更新；其实，dmraid对于大容量硬盘的识别容易出错，如今的硬盘都是1TB以上的，对于dmraid很容易造成错误；最后，dmraid是将RAID映射成mapper，无法真正实现RAID数据恢复等高级功能。
 \end{itemize}
 
 \subsubsection{mdadm}
 \begin{itemize}
 \item 在linux系统中目前以MD(Multiple Devices)虚拟块设备的方式实现软件RAID，利用多个底层的块设备虚拟出一个新的虚拟设备，即使用mdadm命令\footnote{http://blog.csdn.net/yuesichiu/article/details/8502680}。
-\item Fake RAID只提供廉价的控制器，RAID处理开销仍由CPU和内存负责，因此性能与效率基本与Software RAID基本一直。对于Linux系统，使用Software RAID一般比Fake RAID更稳定和安全\footnote{http://blog.163.com/jiangh\_1982/blog/static/12195052014252131760/}。
+
+\item Fake RAID只提供廉价的控制器，RAID处理开销仍由CPU和内存负责，因此性能与效率基本与Software RAID基本一致。对于Linux系统，使用Software RAID一般比Fake RAID更稳定和安全\footnote{http://blog.163.com/jiangh\_1982/blog/static/12195052014252131760/}。
+
 \item Ubuntu的软RAID相关命令为mdadm，其配置、测试、删除参考\footnote{http://blog.itpub.net/27771627/viewspace-1246416/}。 
+
 \item \textbf{在没有Hardware RAID的条件下，推荐使用mdadm实现RAID}。
 \end{itemize}
 
@@ -362,34 +394,35 @@ RAID功能：支持RAID 0，1，5，10
 \begin{enumerate}
 \item \textbf{安装mdadm，查看实际磁盘情况}。
 \begin{bash}
-sudo apt-get install mdadm
-sudo fdisk -l
+sudo apt-get install mdadm	 #安装mdadm
+sudo fdisk -l			 #查看磁盘空间以及分区
 \end{bash}
-\item \textbf{初始化}。。对各个磁盘删除分区（fdisk命令），且进行格式化（mkfs命令）。小容量硬盘（不到2TB）使用MRB分区表，大容量硬盘（2TB以上）使用GPT分区\footnote{http://wangheng.org/shi-yong-parted-chuang-jian-gpt-fen-qu.html}。
+
+\item \textbf{初始化}。对各个磁盘删除分区（fdisk命令），且进行格式化（mkfs命令）。小容量硬盘（不到2TB）使用MRB分区表，大容量硬盘（2TB以上）使用GPT分区\footnote{http://wangheng.org/shi-yong-parted-chuang-jian-gpt-fen-qu.html}。如果要对大容量硬盘分区，使用parted命令。
 \begin{bash}
-sudo fdisk -l		   #查看磁盘空间以及分区
-sudo fdisk /dev/sdX  #用fdisk对某块硬盘处理，/dev/sdX中X表示磁盘号，例如/dev/sdb
-sudo mkfs.ext4 /dev/sdX    #用mkfs将/dev/sdX格式化为ext4格式
-sudo parted /dev/sdX	#用parted工具对大容量硬盘分区，为GPT分区
+sudo fdisk /dev/sdX  		 #用fdisk对某块硬盘处理，/dev/sdX中X表示磁盘号，例如/dev/sdb
+sudo mkfs.ext4 /dev/sdX   	 #用mkfs将/dev/sdX格式化为ext4格式
 \end{bash}
-\item \textbf{创建RAID5}
+
+\item \textbf{创建RAID5}。将3块磁盘组成RAID5，-l5表示level5,-n3表示磁盘数目为3。
 \begin{bash}
-sudo fdisk -l		   #查看磁盘空间以及分区
-sudo fdisk /dev/sdX  #用fdisk对某块硬盘处理，/dev/sdX中X表示磁盘号，例如/dev/sdb
-sudo mdadm -C /dev/md0 -l5 -n3 /dev/sdb1 /dev/sdb /dev/sdc /dev/sdd   #sdb，sdc和sdd为磁盘，md0为创建好的RAID盘
-sudo parted /dev/sdX	#用parted工具对大容量硬盘分区，为GPT分区
+sudo mdadm -C /dev/md0 -l5 -n3 /dev/sdb1 /dev/sdb /dev/sdc /dev/sdd   #sdb，sdc和sdd为组成RAID5的磁盘，md0为创建好的RAID盘
 \end{bash}
-\item \textbf{格式化}
+
+\item \textbf{格式化}。将RAID格式化为Linux支持的Ext4文件系统。
 \begin{bash}
-cat /proc/mdstat	#查看RAID恢复进度
-sudo mdadm -D /dev/md0  #查看RAID详细情况
+cat /proc/mdstat		#查看RAID恢复进度
+sudo mdadm -D /dev/md0 		#查看RAID详细情况
+sudo mkfs.ext4 /dev/md0 	#对RAID格式化为Ext4
 \end{bash} 
-\item \textbf{挂载}
+
+\item \textbf{挂载}。将RAID挂载到/deep目录下。
 \begin{bash}
 sudo mkdir /deep		#在/目录下创建/deep
 sudo mount /dev/md0 /deep  	#将md0挂载到/deep下
 \end{bash} 
-\item \textbf{自动挂载}。将/dev/md0 /deep ext4 defaults 1 2，写入/etc/fstab。建议重启后再查看RAID的磁盘号，可能我们创建的盘号为md0，但是重启后显示为md127，如果将之前的/dev/md0直接写入/etc/fstab，如果出错，可能导致重启出现问题。
+
+\item \textbf{自动挂载}。将\underline{/dev/md0 /deep ext4 defaults 1 2}，写入/etc/fstab。建议重启多次后再查看RAID的磁盘号，可能我们创建的盘号为md0，但是重启后显示为md127。如果将之前的/dev/md0直接写入/etc/fstab，如果出错，可能导致重启出现问题。
 \begin{bash}
 sudo vim /etc/fstab 
 \end{bash}
@@ -397,20 +430,21 @@ sudo vim /etc/fstab
 
 
 \section{Caffe}
+\textbf{NVIDIA的DIGITS DevBox}\href{http://docs.nvidia.com/deeplearning/digits-devbox-sw-release-notes/index.html#axzz3k5SLx3Q7}{默认软件配置}，\textbf{可作为参考}。
 \subsection{Caffe配置}
-\textbf{在本台DIGITS DevBox中，Caffe所安装的依赖或者库文件：}
+\textbf{在本台DIGITS DevBox服务器中，Caffe所安装的依赖或者库文件：}
 \begin{itemize}
 \item Ubuntu 14.04.3（默认情况为Ubuntu 14.04.3，暂时不推荐使用15.04）
 \item 显卡驱动346.82（最新版为355.06）
-\item CUDA7.0
+\item CUDA7.0（目前有CUDA6.5、CUDA7.0和CUDA7.5三个版本，CUDA7.5还不稳定，暂不使用）
 \item cuDNN v2（cuDNN v3已更新）
-\item OpenCV3.0.0rc1（推荐用这个包，之前下载的库在安装事可能出现问题）
+\item OpenCV3.0.0rc1（推荐用欧新宇老师提供的下载包，之前手动下载的库在安装过程可能出现问题）
 \item Python 2.7.6（自动安装）
 \item Matlab2014b
-\item MKL(作为BLAS，使用parallel\_studio\_xe\_2015\_update2.tar.gz，目前2016版已更新)
+\item MKL(作为BLAS，使用parallel\_studio\_xe\_2015\_update2.tar.gz，目前2016版已更新。ATLAS、OpenBLAS试过，没成功，可以再作尝试)
 \item glog(Google Logging Library，glog-0.3.3)
 \end{itemize}
-NVIDIA的DIGITS DevBox\href{http://docs.nvidia.com/deeplearning/digits-devbox-sw-release-notes/index.html#axzz3k5SLx3Q7}{默认软件配置}，可作参考。
+
 
 \subsection{Caffe安装}
 目前，Caffe主要的安装步骤是参考了欧新宇老师博客中的\href{http://ouxinyu.github.io/Blogs/20140723001.html}{Caffe + Ubuntu 15.04 + CUDA 7.0 新手安装配置指南}。安装Caffe时请认真阅读。
@@ -421,13 +455,14 @@ NVIDIA的DIGITS DevBox\href{http://docs.nvidia.com/deeplearning/digits-devbox-sw
 \begin{bash}
 sudo ./NVIDIA-Linux-x86_64-355.06.run --unisntall
 \end{bash}
-\item 目前（2015.08.26）的从caffe的Github上下载的caffe-master是有问题的，因为很多文件格式改为了*.h5，这是HDF5格式。没有依赖文件的话，Ubuntu暂时不支持。如果碰到如果问题，将*.h5格式全去掉.h5，改为二进制格式则正常运行。例如在caffer-master/examples/cifar10/train\_quick.sh，caffer-master/examples/cifar10/train\_quick.sh与caffer-master/examples/imagenet/train\_caffenet.sh。目前该问题只能通过这个方法解决，但是在将来可以查看、安装\href{https://github.com/live-clones/hdf5}{HDF5}来尝试解决问题。
-\item 在Github的Caffe库里的release版本存在很多错误，例如caffe-rc2，或许是编译或者安装问题，总之尽量使用最新的或者服务器上的Caffe版本。
+\item \textbf{目前（2015.08.26）的从caffe的Github上下载的caffe-master是有问题的}。在编译make阶段，运行没问题，但是在跑Cifar10数据集时，会报错\underline{H5FOpencv()}等。因为部分文件格式改为了*.h5，这是HDF5格式。没有依赖文件的话，Ubuntu暂时不支持。如果碰到如果问题，将*.h5格式全去掉.h5，改为二进制格式则正常运行。例如在caffer-master/examples/cifar10/train\_quick.sh，caffer-master/examples/cifar10/train\_quick.sh与caffer-master/examples/imagenet/train\_caffenet.sh。目前该问题只能通过这个方法解决，但是在将来可以查看、安装\href{https://github.com/live-clones/hdf5}{HDF5}来尝试解决问题。
+\item 在Github的Caffe库里的release版本存在很多错误，例如caffe-rc2，在编译或者安装上会出现问题，总之尽量使用最新的或者之前备份的Caffe版本。
 \end{itemize}
 
 \section{DIGITS}
 \href{http://devblogs.nvidia.com/parallelforall/digits-deep-learning-gpu-training-system/}{DIGITS}是一款检测深度学习的软件工具。目前使用的版本为DIGITS v2.0.0-rc for Ubuntu 14.04
 \subsection{软件需求}
+DIGITS具体软件参考\href{https://github.com/NVIDIA/DIGITS}{Github官网}。
 \begin{itemize}
 \item NVIDIA驱动版本必须是346或者更高版本
 \item CUDA toolkit（>=6.5）
@@ -439,7 +474,8 @@ sudo apt-get install graphviz
 \end{bash}
 \end{itemize}
 
-\subsection{安装GIGITS}
+\subsection{安装DIGITS}
+安装DIGITS可参考\href{http://devblogs.nvidia.com/parallelforall/digits-deep-learning-gpu-training-system/}{Github官网}。
 \begin{enumerate}
 \item 下载安装包\href{https://developer.nvidia.com/digits}{digits-2.0.0-rc.tar.gz}
 \item 解压安装包
@@ -458,11 +494,18 @@ cd digits-2.0
 \end{enumerate}
 
 \subsection{DIGITS使用}
-DIGIST主要是通过浏览器的网页应用。具体操作可参考\href{http://devblogs.nvidia.com/parallelforall/digits-deep-learning-gpu-training-system/}{官网}。
-
+DIGIST主要是通过浏览器的网页应用。具体操作可参考\href{https://github.com/NVIDIA/DIGITS/blob/digits-2.0/docs/GettingStarted.md}{Github官网}。
+\begin{enumerate}
+\item Dateset
+\item Model
+\end{enumerate}
 
 
 \section{其他工作}
+\subsection{SLI}
+SLI是一种多GPU(图形处理器)扩展引擎，从本质上来讲这是一种利用一块以上的显卡来提升游戏性能的方法，每额外增加一颗GPU，性能最多增加100\%。通过让多颗图形处理器能够独立地渲染单一3D环境，理论上我们能够让帧速率达到单颗GPU时的帧速率与GPU数量相乘的水平。因此，其主要作用是提升游戏场景的渲染和加速，在DeepLearning中，不需要设置SLI。
+
+
 \subsection{安装NVIDIA显卡驱动}
 \textbf{此方法只适合安装NVIDIA最新的显卡驱动，较为麻烦，不推荐使用，只供参考。在Caffe安装过程中，提供了更简便的方法来安装NVIDIA显卡驱动，请使用其方法。}
 \begin{enumerate}
@@ -536,7 +579,7 @@ sudo parted /dev/sdX	#用parted工具对大容量硬盘分区，为GPT分区
 \centering
 \includegraphics[width=0.4\textwidth]{creat_raid}
 \end{figure}
-\item 设置RAID，选中上图的选项中的Disks，显示下图。选择硬盘创建RAID。
+\item 设置RAID，选中上图的选项中的Disks，显示下图。
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.4\textwidth]{select_raid}
