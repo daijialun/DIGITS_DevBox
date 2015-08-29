@@ -496,8 +496,20 @@ cd digits-2.0
 \subsection{DIGITS使用}
 DIGIST主要是通过浏览器的网页应用。具体操作可参考\href{https://github.com/NVIDIA/DIGITS/blob/digits-2.0/docs/GettingStarted.md}{Github官网}。
 \begin{enumerate}
-\item Dateset
-\item Model
+\item \textbf{打开DIGITS}。在digits-2.0目录下，运行./runme.sh，根据提示信息，在浏览器中输入http://localhost:5000/，例如http://0.0.0.0:5000/，如Figure~\ref{fig:digits}。如果要求配置工具，则输入Caffe路径。
+\begin{figure}[!ht]
+  \centering 
+  \subfigure[]{ 
+    \includegraphics[width=0.55\textwidth]{digits_terminal}} 
+  \subfigure[]{ 
+    \includegraphics[width=0.6\textwidth]{digits_web}} 
+  \caption{登陆DIGITS}
+  \label{fig:digits}
+\end{figure}
+
+\item \textbf{创建Dateset}。输入图像目录路径时，确保该路径下至少含有两个包含图像的文件夹，即要有两类图像以上。
+
+\item \textbf{训练Model}。在选择已有的Model时，请确保数据集内图像形式符合Model的要求，例如LeNet的Dataset形式为grayscale、28$\times$28的图像，而AlexNet的Dataset形式为3通道、256$\times$256的图像。如果Dataset形式不符合，训练过程可能会报错。
 \end{enumerate}
 
 
