@@ -496,7 +496,7 @@ cd digits-2.0
 \subsection{DIGITS使用}
 DIGIST主要是通过浏览器的网页应用。具体操作可参考\href{https://github.com/NVIDIA/DIGITS/blob/digits-2.0/docs/GettingStarted.md}{Github官网}。
 \begin{enumerate}
-\item \textbf{打开DIGITS}。在digits-2.0目录下，运行./runme.sh，根据提示信息，在浏览器中输入http://localhost:5000/，例如http://0.0.0.0:5000/，如Figure~\ref{fig:digits}。如果要求配置工具，则输入Caffe路径。
+\item \textbf{打开DIGITS}。在digits-2.0目录下，运行./runme.sh，根据提示信息，在浏览器中输入http://localhost:5000/，例如http://0.0.0.0:5000/，如Figure~\ref{fig:digits}。如果要求配置工具，则输入Caffe路径。如果想要配置不同Deep Learning工具，则在~/.digits/digits.cfg中修改路径即可。
 \begin{figure}[!ht]
   \centering 
   \subfigure[]{ 
@@ -511,6 +511,11 @@ DIGIST主要是通过浏览器的网页应用。具体操作可参考\href{https
 
 \item \textbf{训练Model}。在选择已有的Model时，请确保数据集内图像形式符合Model的要求，例如LeNet的Dataset形式为grayscale、28$\times$28的图像，而AlexNet的Dataset形式为3通道、256$\times$256的图像。如果Dataset形式不符合，训练过程可能会报错。
 \end{enumerate}
+
+\subsection{参考资料}
+\begin{itemize}
+\item \href{http://www.csdn.net/article/2015-05-07/2824637}{EC2上的深度学习：CUDA 7/cuDNN/caffe/DIGITS实战教程}
+\end{itemize}
 
 
 \section{其他工作}
